@@ -37,7 +37,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="#1653EF"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintTop_toBottomOf="@+id/calendarView"
         tools:layout_editor_absoluteX="16dp">
@@ -46,8 +45,7 @@
             android:id="@+id/rvNotes"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:background="#17BC84" />
+            android:orientation="vertical" />
 
 
     </LinearLayout>
@@ -57,7 +55,6 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_marginBottom="15dp"
-        android:background="#E60505"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -67,8 +64,7 @@
             android:id="@+id/rvTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="#E744A2"/>
+            android:orientation="horizontal"/>
     </LinearLayout>
 
     <ImageButton

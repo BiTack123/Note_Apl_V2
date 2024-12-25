@@ -18,7 +18,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 @AndroidEntryPoint
-class SecondActivity : AppCompatActivity() {
+class   SecondActivity : AppCompatActivity() {
 
     private val secondViewModel: SecondViewModel by viewModels()
     private lateinit var binding: ActivitySecondBinding

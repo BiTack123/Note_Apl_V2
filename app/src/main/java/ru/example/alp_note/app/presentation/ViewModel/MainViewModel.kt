@@ -1,5 +1,6 @@
 package ru.example.alp_note.app.presentation.ViewModel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.example.alp_note.domain.model.NoteModel
+import ru.example.alp_note.domain.usecase.DeleteNoteUseCase
 import ru.example.alp_note.domain.usecase.GetAllNotesUseCase
 import java.sql.Timestamp
 import java.time.LocalTime
@@ -17,10 +19,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val getAllNotesUseCase: GetAllNotesUseCase
+    private val getAllNotesUseCase: GetAllNotesUseCase,
+    private val deleteNoteUseCase: DeleteNoteUseCase
 ) : ViewModel() {
 
-    val _listNote = MutableLiveData<List<NoteModel>>()
+    private val _listNote = MutableLiveData<List<NoteModel>>()
     val listNote: LiveData<List<NoteModel>> = _listNote.switchMap { noteModels ->
         _date.map { selectedDate ->
             noteModels.filter { it.date_start == selectedDate }
@@ -73,6 +76,14 @@ class MainViewModel @Inject constructor(
     fun getALl() {
         viewModelScope.launch {
             _listNote.value = getAllNotesUseCase()
+        }
+    }
+
+    fun deleteNote(note: NoteModel){
+        viewModelScope.launch {
+            Log.d("MainViewModel", "Deleting note: ${note.name}")
+            deleteNoteUseCase(note)
+            getALl()
         }
     }
 }

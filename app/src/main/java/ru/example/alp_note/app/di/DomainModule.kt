@@ -5,6 +5,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import ru.example.alp_note.domain.repository.NoteRepository
+import ru.example.alp_note.domain.usecase.DeleteNoteUseCase
 import ru.example.alp_note.domain.usecase.GetAllNotesUseCase
 import ru.example.alp_note.domain.usecase.InsertNewNoteUseCase
 import ru.example.alp_note.domain.usecase.UpdateNoteUseCase
@@ -24,7 +25,12 @@ class DomainModule {
     }
 
     @Provides
-    fun provideUpdateNoteUserCase(noteRepository: NoteRepository): UpdateNoteUseCase{
+    fun provideUpdateNoteUseCase(noteRepository: NoteRepository): UpdateNoteUseCase{
         return UpdateNoteUseCase(noteRepository = noteRepository)
+    }
+
+    @Provides
+    fun provideDeleteNoteUseCase(noteRepository: NoteRepository): DeleteNoteUseCase{
+        return DeleteNoteUseCase(noteRepository = noteRepository)
     }
 }

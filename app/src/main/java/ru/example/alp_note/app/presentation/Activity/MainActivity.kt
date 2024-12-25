@@ -17,22 +17,13 @@ import ru.example.alp_note.databinding.ActivityMainBinding
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-
     private val mainViewModel: MainViewModel by viewModels()
     private lateinit var binding: ActivityMainBinding
-    private lateinit var notesAdapter: MainAdapterNotes
-    private lateinit var timeAdapter: MainAdapterTime
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        mainViewModel._listNote.observe(this, Observer { noteList ->
-            // Здесь мы получаем актуальные данные, так как Observer срабатывает при обновлении LiveData
-            Log.v("ListNote_", "Updated list: $noteList")
-        })
 
         mainViewModel.getALl()
 
@@ -56,10 +47,14 @@ class MainActivity : AppCompatActivity() {
         //AdapterNotes
         val notesRecyclerView = binding.rvNotes
         val adapterNotes = MainAdapterNotes (
-            mutableListOf()
-        ){ selectedNote ->
-            mainViewModel.selectedNote(selectedNote)
-        }
+            mutableListOf(),
+            onNoteSelected = { note ->
+                mainViewModel.selectedNote(note)
+            },
+            onNoteDelete = { note ->
+                mainViewModel.deleteNote(note)
+            }
+        )
         notesRecyclerView.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         notesRecyclerView.adapter = adapterNotes
@@ -82,20 +77,20 @@ class MainActivity : AppCompatActivity() {
 
         val secondActivityLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
-                mainViewModel.getALl() // Обновить список заметок
+                mainViewModel.getALl()
             }
         }
 
         val btnCreateNewNote = binding.imbtnCreateNew
         btnCreateNewNote.setOnClickListener {
             val intent = Intent(this, SecondActivity::class.java)
-            intent.putExtra("isEditing", false) // Новый режим (не редактирование)
+            intent.putExtra("isEditing", false)
             intent.putExtra("id", 0)
             intent.putExtra("date_start", mainViewModel.date.value!!)
             intent.putExtra("date_finish", mainViewModel.date.value!!)
             intent.putExtra("name", "")
             intent.putExtra("description", "")
-            secondActivityLauncher.launch(intent) // Запуск через launcher
+            secondActivityLauncher.launch(intent)
         }
 
         mainViewModel.selectedNote.observe(this, Observer { note ->
@@ -106,7 +101,7 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra("date_finish", note.date_finish)
             intent.putExtra("name", note.name)
             intent.putExtra("description", note.description)
-            secondActivityLauncher.launch(intent) // Запуск через launcher
+            secondActivityLauncher.launch(intent)
         })
     }
 }
